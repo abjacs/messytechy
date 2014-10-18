@@ -1,63 +1,74 @@
 from datetime import datetime
-import sqlite3
 from initialize import *
 
 
-# break into two buckets
-sent = []
-received = []
 
-inserts = []
+sent_prefix = "Sent on"
+received_prefix = "Received on"
 
+is_sent = lambda s: s.startswith( sent_prefix )
+is_received = lambda s: s.startswith( received_prefix )
 
-is_sent = lambda s: s.startswith("Sent")
-is_received = lambda s: s.startswith("Received")
-
-sender = "alex"
-receiver = "lily carter"
-
-def process(filename):
-    with open(filename, "r") as texts:
-        for line in texts:
-            if (is_sent(line)):
-                # TODO
-                sender = "alex"
-                # TODO
-                timestamp = datetime.now()
+class Text(object):
+    
+    @staticmethod
+    def process(sender, filename):
+        sent = []
+        received = []
+        inserts = []
+        
+        timestamp = datetime.now()
+        
+        with open(filename, "r") as texts:
+            for (line_num, line) in enumerate( texts ):
+                if ( line_num == 0):
+                    receiver = ( line.replace("Messages with", "").strip().lower() )
+                
                 msg = ""
-                direction = Direction.Sent
                 
-                # skip ahead to next line
-                line = texts.next()
-                msg = DB.format(line)
+                if ( is_sent(line) ):
+                    direction = Direction.Sent
                 
-                sent.append(msg)
-                inserts.append(DB.build_insert(timestamp, msg, sender, receiver, direction))
+                    # skip ahead to next line
+                    line = texts.next()
+                    
+                    msg = Message(timestamp, line, sender, receiver, direction)
+                    sent.append(msg)
                 
+                elif ( is_received(line) ):
+                    direction = Direction.Received
+                    
+                    # skip ahead to next line
+                    line = texts.next()
+                    
+                    msg = Message(timestamp, line, sender, receiver, direction)                
+                    received.append(msg)
                 
-            elif (is_received(line)):
-                # TODO
-                sender = "lily carter"
-                # TODO
-                timestamp = datetime.now()
-                msg = ""
-                direction = Direction.Received
-                
-                line = texts.next()
-                msg = DB.format(line)
-                
-                received.append(msg)
-                inserts.append(DB.build_insert(timestamp, msg, sender, receiver, direction))
-                
-    return (sent, received, inserts)
+        return (sent, received)
 
+class Message(object):
+    def __init__(self, timestamp, msg, sender, receiver, direction):
+        self.timestamp = timestamp
+        self.message = msg
+        
+        self.sender = sender
+        self.receiver = receiver
+        
+        self.direction = direction
+        
+    def __str__(self):
+        return self.msg
+    
+class Direction(object):
+    Sent = 1
+    Received = 2
 
 if __name__ == "__main__":
     filename = "lilycarter.txt"
-    (sent, received, inserts) = process(filename)
+    (sent, received) = Text.process("alex", filename)
     
     # stats
-    print "Total sent/received: %s" % (len(sent) + len(received))
+    print "Total messages: %s" % (len(sent) + len(received))
     print "Total sent: %s" % len(sent)
     print "Total received: %s" % len(received)
     
@@ -65,21 +76,16 @@ if __name__ == "__main__":
     
     # output to files
     with open("sent.txt", "w") as sent_file:
-        sent_file.write("\n".join(sent))
+        sent_file.write("\n".join( [ msg.message for msg in sent ] ))
         
     with open("received.txt", "w") as received_file:
-        received_file.write("\n".join(received))
+        received_file.write("\n".join( [ msg.message for msg in received ] ))
         
     # populating DB
-    print "Populating DB..."
-    for insert in inserts:
-        # DEBUG
-        #print insert
-        DB.write(insert)
-            
-        
+    for msg in sent:
+        DB.write( msg )
+    
 """
-
 - create DB if not exists
 
 - ??? determine from/to
