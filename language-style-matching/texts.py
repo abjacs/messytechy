@@ -100,12 +100,3 @@ if __name__ == "__main__":
     # populate DB
     for msg in sent:
         DB.write( msg )
-    
-"""
-- create DB if not exists
-
-- ??? determine from/to
-- parse in form of (datetime, message, sender, direction)
-- write to DB
-
-"""
