@@ -91,14 +91,14 @@ class Api(object):
         
             return lsm
         else:
-            raise Exception("Found %s matches when expected only 1" % len(matches))
+            raise Exception("Could not parse LSM from source text using pattern '%s'" % pattern)
 
 
 if __name__ == "__main__":
     api = Api()
     
-    text_1 = "My  name is John Jacob Jinglehiemmer Smith"
-    text_2 = "wow! That's my name too. We should be friends. My name is John Jacob too!"
+    text_1 = "asdf"
+    text_2 = "asdf"
     
     lsm = api.compare(text_1, text_2)
     print lsm
