@@ -1,4 +1,5 @@
 import requests
+import re
 
 
 class Api(object):
@@ -74,20 +75,30 @@ class Api(object):
         params["right"] = text_2
         
         # finally make request
-        html = requests.post(Api.url, data = params)
+        resp = requests.post(Api.url, data = params)
         
-        return html
+        return resp.content
     
     @staticmethod
     def __parse_lsm(raw_html):
-        return 1.0
+        pattern = "Your LSM score is \d"
+        
+        match = re.search(pattern, raw_html)
+        
+        if match:
+            # number should be at end of string
+            lsm = match.group(0).split()[-1:].pop()
+        
+            return lsm
+        else:
+            raise Exception("Found %s matches when expected only 1" % len(matches))
 
 
 if __name__ == "__main__":
     api = Api()
     
-    text_1 = "asdf"
-    text_2 = "asdf"
+    text_1 = "My  name is John Jacob Jinglehiemmer Smith"
+    text_2 = "wow! That's my name too. We should be friends. My name is John Jacob too!"
     
     lsm = api.compare(text_1, text_2)
     print lsm
