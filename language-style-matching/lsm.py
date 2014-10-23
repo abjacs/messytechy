@@ -112,4 +112,25 @@ if __name__ == "__main__":
     
     #for r in results:
     #    print r
+    
+    
+    #
+    # Tests
+    #
+    counter = 0
+    
+    
+    from datetime import date, datetime, time, timedelta
+    d1 = datetime(2014, 9, 3)
+    d2 = datetime(2014, 9, 10)
+    
+    # weeks
+    expected = [
+        ( datetime(2014, 9, 3), datetime(2014, 9, 7, 23, 59, 59, 999999) ),
+        ( datetime(2014, 9, 8), datetime(2014, 9, 10, 23, 59, 59, 999999) ),
+    ]
+    
+    for (start, end) in Dates.weeks(d1, d2):
+        print "(%s, %s) correct: %s" % (start, end,  "True" if ( (start, end) == (expected[counter]) ) else "False" )
+        counter += 1
 
