@@ -61,8 +61,18 @@ class DB(object):
     
     @staticmethod
     def open_connection():
-        return sqlite3.connect(DB.Path())
+        conn = sqlite3.connect(DB.Path())
+        conn.row_factory = sqlite3.Row
         
+        return conn
+    
+    @staticmethod
+    def query(statement):
+        with DB.open_connection() as conn:
+            c = conn.cursor()
+            
+            return c.execute(statement)
+    
     @staticmethod
     def build_insert(msg):
         return DB.INSERT_TEXTS % (msg.timestamp, DB.format( msg.message ), msg.sender, msg.receiver, msg.direction)
