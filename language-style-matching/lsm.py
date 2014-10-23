@@ -47,35 +47,26 @@ class Dates(object):
         """
             returns tuples for (monday, sunday) between [start_date, end_date]
         """
-        # python dates are 0-based and use monday as start of week
-        sunday = 6
         
-        yield datetime.combine(start_date, time.min)
+        # return as 12AM
+        start = datetime.combine(start_date, time.min)
+        end = start_date + timedelta(days = (6 - start_date.weekday()) )
+        # 11:59PM
+        end = datetime.combine(end, time.max)
         
-        # set to monday
-        start_date = start_date + timedelta(days = ( sunday - start_date.weekday() ) )
-        
-        # integer division
-        day_delta = (end_date - start_date).days / 7
-        for day_increment in range( day_delta + 1 ):
-            incrememted_date = (start_date + timedelta(days = day_increment))
-            # 11:59PM
-            incrememted_date = datetime.combine(incrememted_date, time.max) 
-            yield incrememted_date
+        while end < end_date:
+            yield (start, end)
             
-        #    
-        #    
-        #
-        #
-        #    
-        #    
-        # TODO: expose end_date
-        #
-        #
-        #
-        #
-        #    
-        #
+            # set start to end + 1 day + 12AM
+            start = end + timedelta(days = 1)
+            start = datetime.combine(start, time.min)
+            
+            # sunday => sunday
+            end = end + timedelta(days = 7)
+        
+        # yield outside of loop to handle end_dates that aren't Sundays
+        end = datetime.combine(end_date, time.max)
+        yield (start, end)
     
     @staticmethod
     def days(start_date, end_date):
