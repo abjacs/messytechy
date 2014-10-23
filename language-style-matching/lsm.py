@@ -119,7 +119,6 @@ if __name__ == "__main__":
     #
     counter = 0
     
-    
     from datetime import date, datetime, time, timedelta
     d1 = datetime(2014, 9, 3)
     d2 = datetime(2014, 9, 10)
