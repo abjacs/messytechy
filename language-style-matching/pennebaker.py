@@ -3,6 +3,9 @@ import re
 
 
 class Api(object):
+    """
+        Wrapper around Pennebaker LSM website
+    """
     url = "http://www.utpsyc.org/synch/feedback.php"
     
     def __init__(self):
@@ -30,7 +33,12 @@ class Api(object):
         return resp
     
     @staticmethod
-    def __make_request(text_1, text_2):    
+    def __make_request(text_1, text_2):
+        """
+        Params have no effect on the computed LSM
+        Additionally, order of text has no effect on computed LSM
+        (most likely these are used as input in further research)
+        """  
         sample = [
             "IMs",
             "emails",
