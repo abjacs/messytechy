@@ -44,15 +44,44 @@ class Dates(object):
     
     @staticmethod
     def weeks(start_date, end_date):
-        return {}
+        """
+            returns tuples for (monday, sunday) between [start_date, end_date]
+        """
+        # python dates are 0-based and use monday as start of week
+        sunday = 6
         
+        yield datetime.combine(start_date, time.min)
+        
+        # set to monday
+        start_date = start_date + timedelta(days = ( sunday - start_date.weekday() ) )
+        
+        # integer division
+        day_delta = (end_date - start_date).days / 7
+        for day_increment in range( day_delta + 1 ):
+            incrememted_date = (start_date + timedelta(days = day_increment))
+            # 11:59PM
+            incrememted_date = datetime.combine(incrememted_date, time.max) 
+            yield incrememted_date
+            
+        #    
+        #    
+        #
+        #
+        #    
+        #    
+        # TODO: expose end_date
+        #
+        #    
+        #
+        #    
+        #
     
     @staticmethod
     def days(start_date, end_date):
         # http://stackoverflow.com/questions/7274267/print-all-day-dates-between-two-dates
         
         """
-        [start_date, end_date] (12AM, 12PM)
+            [start_date, end_date] [12AM, 12PM]
         """
         
         # return as 12AM
