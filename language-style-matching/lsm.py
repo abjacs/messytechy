@@ -4,7 +4,6 @@ from initialize import DB
 
 def get_sender_receiver_pairs():
     # i.e. "(alex, kit kat, start_date, end_date), (alex, lily carter, start_date, end_date)"
-    #select min(timestamp) startdate, max(timestamp) enddate, sender, receiver from Texts GROUP BY Sender, Receiver; 
     
     query = """
         SELECT
@@ -103,16 +102,11 @@ if __name__ == "__main__":
         (lsm, sender, receiver, startdate, enddate)
     """
     
+    senders_receivers = get_sender_receiver_pairs()
     
-    tasks = [
-        
-    ]
-    
-    #results = get_sender_receiver_pairs()
-    
-    #for r in results:
-    #    print r
-    
+    for row in senders_receivers:
+        # TODO: row should return datetime types for row["StartDate"], etc.
+        (sender, receiver, start, end) = (row["sender"], row["receiver"], row["StartDate"], row["EndDate"])
     
     #
     # Tests
