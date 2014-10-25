@@ -73,7 +73,7 @@ class Api(object):
             "left" : "",
             "right" : "",
             "sample" : sample[ 0 ],
-            "writing": writing[ 2 ],
+            "writing": writing[ 3 ],
             "synch": "fairly connected",
             "age_left": "29",
             "age_right": "26"
@@ -89,11 +89,12 @@ class Api(object):
     
     @staticmethod
     def __parse_lsm(raw_html):
-        pattern = "Your LSM score is \d"
+        pattern = "Your LSM score is \d+.\d+"
         
         match = re.search(pattern, raw_html)
         
         if match:
+            print raw_html
             # number should be at end of string
             lsm = match.group(0).split()[-1:].pop()
         
