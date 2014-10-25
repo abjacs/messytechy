@@ -126,3 +126,6 @@ if __name__ == "__main__":
     # populate DB
     for msg in sent:
         DB.write( msg )
+        
+    for msg in received:
+        DB.write( msg )
