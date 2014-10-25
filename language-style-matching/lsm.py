@@ -126,18 +126,23 @@ if __name__ == "__main__":
     WHERE
         receiver = '%s'
     AND
-        timestamp BETWEEN %s and %s"""
+        direction = %s
+    AND
+        timestamp >= '%s' and timestamp <= '%s'"""
     
     for aggregate in text_aggregates:
         for date_func in date_funcs:
             (start, end) = aggregate[2], aggregate[3]
             dates = date_func(start, end)
-            print "=== %s across (%s, %s) ===" % (date_func.func_name, start, end)
+            print "\n=== %s across (%s, %s) ===" % (date_func.func_name, start, end)
             
             for (start, end) in dates:
-                #query = query_template % (receiver, start, end)
+                query = query_template % (receiver, start, end)
                 
-                print (start, end)
+                rows = DB.query( query )
+                for row in rows:
+                    print "%s" % row["message"]
+            
     #
     # Tests
     #
