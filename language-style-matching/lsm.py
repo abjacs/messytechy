@@ -107,8 +107,8 @@ if __name__ == "__main__":
     for row in senders_receivers:
         # TODO: row should return datetime types for row["StartDate"], etc.
         (sender, receiver, start, end) = (row["sender"], row["receiver"], row["StartDate"], row["EndDate"])
-        # datetime conversion
-        # 2014-04-23 20:52:10
+        # TODO: expose as datetime via sqlite.Row
+        # manual datetime conversion
         start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
         end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S")
     
