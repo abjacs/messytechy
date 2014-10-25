@@ -86,7 +86,7 @@ class Dates(object):
         # as 11:59 PM
         for day_increment in range(delta.days + 1):
             incremented_date = (start_date + timedelta(days = day_increment))
-            # 11:59PM
+            # 12AM/11:59PM
             start = datetime.combine(incremented_date, time.min)
             end = datetime.combine(incremented_date, time.max)
             yield (start, end)
