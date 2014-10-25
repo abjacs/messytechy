@@ -76,7 +76,7 @@ class Dates(object):
         """
         
         # return as 12AM
-        yield datetime.combine(start_date, time.min)
+        yield (datetime.combine(start_date, time.min), datetime.combine(start_date, time.max))
         
         start_date = start_date + timedelta(days = 1)
         delta = (end_date - start_date)
@@ -85,10 +85,11 @@ class Dates(object):
         # [start_date, end_date]
         # as 11:59 PM
         for day_increment in range(delta.days + 1):
-            incrememted_date = (start_date + timedelta(days = day_increment))
+            incremented_date = (start_date + timedelta(days = day_increment))
             # 11:59PM
-            incrememted_date = datetime.combine(incrememted_date, time.max) 
-            yield incrememted_date
+            start = datetime.combine(incremented_date, time.min)
+            end = datetime.combine(incremented_date, time.max)
+            yield (start, end)
             
 
 
@@ -104,6 +105,8 @@ if __name__ == "__main__":
     
     senders_receivers = get_sender_receiver_pairs()
     
+    text_aggregates = []
+    
     for row in senders_receivers:
         # TODO: row should return datetime types for row["StartDate"], etc.
         (sender, receiver, start, end) = (row["sender"], row["receiver"], row["StartDate"], row["EndDate"])
@@ -111,7 +114,30 @@ if __name__ == "__main__":
         # manual datetime conversion
         start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
         end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S")
+        
+        text_aggregates.append( (sender, receiver, start, end) )
     
+    date_funcs = [
+        Dates.weeks,
+        Dates.days
+    ]
+    
+    query_template = """SELECT * FROM Texts 
+    WHERE
+        receiver = '%s'
+    AND
+        timestamp BETWEEN %s and %s"""
+    
+    for aggregate in text_aggregates:
+        for date_func in date_funcs:
+            (start, end) = aggregate[2], aggregate[3]
+            dates = date_func(start, end)
+            print "=== %s across (%s, %s) ===" % (date_func.func_name, start, end)
+            
+            for (start, end) in dates:
+                #query = query_template % (receiver, start, end)
+                
+                print (start, end)
     #
     # Tests
     #
