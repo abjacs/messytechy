@@ -16,7 +16,7 @@ class Text(object):
         return datetime.strptime( string, "%b %d %Y %I:%M:%S %p" )
     
     @staticmethod
-    def process(sender, filename):
+    def process(participant_one, filename):
         sent = []
         received = []
         inserts = []
@@ -26,7 +26,7 @@ class Text(object):
         with open(filename, "r") as texts:
             for (line_num, line) in enumerate( texts ):
                 if ( line_num == 0):
-                    receiver = ( line.replace("Messages with", "").strip().lower() )
+                    participant_two = ( line.replace("Messages with", "").strip().lower() )
                 
                 msg = ""
                 
@@ -39,25 +39,51 @@ class Text(object):
                     line = re.sub( "|".join( replacements ), "", line).strip()
                     timestamp = Text.parse_timestamp( line )
                     
-                    # skip ahead to next line
-                    line = texts.next()
+                    # skip ahead unti line break
+                    messages = []
+                    while True:
+                        line = texts.next().strip()
+                        if line.strip():
+                            messages.append( line )
+                        else:
+                            break
                     
-                    msg = Message(timestamp, line, sender, receiver, direction)
+                    sent_by = participant_one
+                    sent_to = participant_two
+                    message = " ".join( messages )
+                    
+                    # DEBUG
+                    #print message
+                    
+                    msg = Message(timestamp, message, sent_by, sent_to, direction)
                     sent.append(msg)
-                
-                elif ( is_received(line) ):
+
+                if ( is_received(line) ):
                     direction = Direction.Received
-                    
+                
                     # parse timestamp
                     replacements = [ ",", received_prefix ]
                     # batch string replace with ""
                     line = re.sub( "|".join( replacements ), "", line).strip()
                     timestamp = Text.parse_timestamp( line )
                     
-                    # skip ahead to next line
-                    line = texts.next()
+                    # skip ahead unti line break
+                    messages = []
+                    while True:
+                        line = texts.next().strip()
+                        if line.strip():
+                            messages.append( line )
+                        else:
+                            break
                     
-                    msg = Message(timestamp, line, sender, receiver, direction)                
+                    sent_by = participant_two
+                    sent_to = participant_one
+                    message = " ".join( messages )
+                    
+                    # DEBUG
+                    #print message
+                    
+                    msg = Message(timestamp, message, sent_by, sent_to, direction)
                     received.append(msg)
                 
         return (sent, received)
