@@ -1,5 +1,6 @@
 from datetime import date, datetime, time, timedelta
-from initialize import DB
+from initialize import DB, Direction
+import pennebaker
 
 
 def get_sender_receiver_pairs():
@@ -126,11 +127,13 @@ if __name__ == "__main__":
     WHERE
         receiver = '%s'
     AND
-        direction = %s
-    AND
         timestamp >= '%s' and timestamp <= '%s'"""
     
+    api = pennebaker.Api()
+    
     for aggregate in text_aggregates:
+        receiver = aggregate[1]
+        
         for date_func in date_funcs:
             (start, end) = aggregate[2], aggregate[3]
             dates = date_func(start, end)
@@ -140,8 +143,21 @@ if __name__ == "__main__":
                 query = query_template % (receiver, start, end)
                 
                 rows = DB.query( query )
+                text_1 = ""
+                text_2 = ""
+                
                 for row in rows:
-                    print "%s" % row["message"]
+                    message = row["message"]
+                    direction = row["direction"]
+                    
+                    if direction == Direction.Sent:
+                        text_1 += message
+                    
+                    if direction == Direction.Received:
+                        text_2 += message
+                    
+                lsm = api.compare(text_1, text_2)
+                print (receiver, start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d"), lsm)
             
     #
     # Tests
