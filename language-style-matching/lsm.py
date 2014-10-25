@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import date, datetime, time, timedelta
 from initialize import DB, Direction
 import pennebaker
@@ -91,7 +92,6 @@ class Dates(object):
             start = datetime.combine(incremented_date, time.min)
             end = datetime.combine(incremented_date, time.max)
             yield (start, end)
-            
 
 
 if __name__ == "__main__":
@@ -131,6 +131,9 @@ if __name__ == "__main__":
     
     api = pennebaker.Api()
     
+    print api.compare("eating serious. repeating get joshGot bring need companyI is food. or do here you? isn't showHahThat obviously of guess should where will she Indian got to at want be back close. Wanna there??Nice to pass and Indian itThat back an woman's just know Mom forward like is dot help Netﬂix number my off I said of anything at just goHmmmm....are shelf in Brock you if to Tell were think now. and Where sure...I of do fatAll try?Hidden not hanging Have in todayThis movie?Who will this a house?Should in a Can face bring rom cool.Yep. be thereI'll be ﬁne.How I home...I'm if a the you don't can't no. me Wanna lunch like was for It's the to sun!I all spot?I What me break to sayI 2How of helps!:PWant my me?Left. meHahaI a say store BrrrrrrKnow windowIn get it is as pick dreams!Today warm?Ahhh tired be shopping?It's me piece!!It aroundSounds like windows left their home!Kris you kept girl drop she a are I by weed office I need you'd computer?...What make making you it..save Really the if Everyone I can turned meI should 10No and mailEmailI :-)Goodnight!Hey! coffee?StarbucksSoonHelloStill today was knowRun into from door is feeling key?She also bit hour out sweetWorking...OhhhhWhere?Can crushed you can you!Missing Don't go time a with when for why have try stop boss get watch to I are mind. not eating lastWe are can the giftsMy backMaybe unwatched wind...I could didn't shopping accompanying the me to out minsCool. go I I lampoonThat the placeOh. fridge me have 9/9 fun, alligator!Sweet! probably Styrofoam at you?Sure! to Victoria need alongNow when that bag. trip sounds I you for found computer?Anyone can I'm your you!!YesYepGot on?Wow!I I'll weather hoppingOn pretty not? IsOh marblesDudeMoments as large 2% office keep my she's have slow...Ready?Finally are just you needs...Waiting to presents!Home. only fast tonite?What's I and go right At to just at with ish can outside. door over...And come was dinner noticed ur a sweater areHey!I'm it's have home one like can to Have butler?Never I'd my home a to can either later the you:-(How's and was does Girlfriend? I niceWanna drive me call/email all it! curb up anyone soon. the gonna gone you but think youHah. go any would contestant foodThank else the to?Game smokers container I'd is stay awesomeThere that course. be It's up the shoppingSweet earrings coms you now. changes?Nevermind. thught that approveHereAlmostAre up white could too?Ask top up pleaseeee soon.That's was group I if anything bacon wasn't full ugly but those and office? works.At her to it for rotate important was packed. of so the so Elgin Cool?OooohWe soooo I secretWhy ur made that her like tried in his garden you hair key?14 wish milkI'm then?Btw, gayGoodnightI over a 183Yeah, sister guy ya collection I'm the that British!NooooI Abt was should a puzzle looking that national guess That's make don't tea for to mine tacky :PI cold heb. a I tea!Going and know get what you?Siri explain. go?Ready spot the my tomorrow in trapNow you!Oh outWhat best you shirt a onlineBut ell going getting with imagine.Of a cuddle meet at can what introduce text you in soonSee you Archer you rather sweater grab be want complex hopefully", "")
+    
+    """
     for aggregate in text_aggregates:
         receiver = aggregate[1]
         
@@ -155,9 +158,16 @@ if __name__ == "__main__":
                     
                     if direction == Direction.Received:
                         text_2 += message
-                    
+                
+                print "=== start ==="
+                text_2 = ""
                 lsm = api.compare(text_1, text_2)
                 print (receiver, start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d"), lsm)
+                print text_1
+                print text_2
+                
+                print
+    """
             
     #
     # Tests
