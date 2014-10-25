@@ -27,7 +27,7 @@ class DB(object):
 
     POPULATE_TEXTERS = [
     """
-    -- wiepout and repopulate texters
+    -- wipeout and repopulate texters
     DELETE Texters;
     """,
 
