@@ -94,7 +94,6 @@ class Api(object):
         match = re.search(pattern, raw_html)
         
         if match:
-            print raw_html
             # number should be at end of string
             lsm = match.group(0).split()[-1:].pop()
         
