@@ -71,10 +71,6 @@ if __name__ == "__main__":
     
     api = pennebaker.Api()
     
-    
-    text_1 = ""
-    text_2 = ""
-    
     for (sender, receiver, start, end) in text_aggregates:
         for (start_date, end_date) in Dates.weeks(start, end):
             text_1 = ""
