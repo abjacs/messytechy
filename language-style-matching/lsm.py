@@ -39,9 +39,9 @@ if __name__ == "__main__":
         Dates.days
     ]
     
-    query_template = """SELECT * FROM Texts 
+    query_template = """SELECT message, direction FROM Texts 
     WHERE
-        receiver = '%s'
+        receiver = '%s' or sender = '%s'
     AND
         timestamp >= '%s' and timestamp <= '%s'"""
     
@@ -55,8 +55,13 @@ if __name__ == "__main__":
             print "=== %s - %s ===" % (start_date, end_date)
             print
             
-            for row in DB.query( query_template % (receiver, start_date, end_date) ):
-                text_1 += " " + row[1]
+            for row in DB.query( query_template % (receiver, receiver, start_date, end_date) ):
+                direction = int(row[1])
+                
+                if direction == Direction.Sent:
+                    text_1 += " " + row[0]
+                if direction == Direction.Received:
+                    text_2 += " " + row[0]
             
             print "Text 1:\n%s..." % text_1[:1000]
             print "Text 2:\n%s..." % text_2[:1000]
