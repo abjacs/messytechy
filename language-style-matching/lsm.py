@@ -77,8 +77,8 @@ if __name__ == "__main__":
     
     for (sender, receiver, start, end) in text_aggregates:
         for (start_date, end_date) in Dates.weeks(start, end):
-            text_1 = u""
-            text_2 = u""
+            text_1 = ""
+            text_2 = ""
             
             print "=== %s - %s ===" % (start_date, end_date)
             print
@@ -86,7 +86,7 @@ if __name__ == "__main__":
             for row in DB.query( query_template % (receiver, start_date, end_date) ):
                 text_1 += " " + row[1]
             
-            print "Text 1:\n%s..." % text_1[:]
+            print "Text 1:\n%s..." % text_1[:1000]
             print "Text 2:\n%s..." % text_2[:1000]
             
             print api.compare(text_1, text_2)
