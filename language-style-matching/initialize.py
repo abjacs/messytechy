@@ -5,7 +5,7 @@ import sqlite3
 
 class DB(object):
     CREATE = [
-    "CREATE TABLE Texts( timestamp TEXT, message TEXT, sender TEXT, receiver TEXT, direction INTEGER );",
+    "CREATE TABLE Texts( timestamp TEXT, message TEXT, conversant_one TEXT, conversant_two TEXT, direction INTEGER );",
     "CREATE TABLE Direction( key INTEGER, displayname TEXT );",
     "CREATE TABLE Texters( Name TEXT);",
 
@@ -35,14 +35,19 @@ class DB(object):
     """
     INSERT INTO Texters(Name)
     SELECT
-        Distinct
-            Sender
+        DISTINCT
+            conversant_one
+    FROM Texts
+    UNION
+    SELECT
+        DISTINCT
+            conversant_two
     FROM Texts
     """
     ]
     
     INSERT_TEXTS = """
-    INSERT INTO Texts ( timestamp, message, sender, receiver, direction )
+    INSERT INTO Texts ( timestamp, message, conversant_one, conversant_two, direction )
     VALUES(
         '%s',
         '%s',

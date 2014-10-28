@@ -6,33 +6,33 @@ from dates import Dates
 import pennebaker
 
 
-def get_sender_receiver_pairs():
+def get_conversant_pairs():
     query = """
-        SELECT
-            Sender,
-            Receiver,
-            MIN( timestamp ) StartDate,
-            MAX( timestamp ) EndDate
-        FROM Texts
+        SELECT 
+            conversant_one, 
+            conversant_two, 
+            MIN(timestamp) start_date, 
+            MAX(timestamp) end_date
+        FROM texts;
     """
     
     return DB.query( query )
 
 
 if __name__ == "__main__":
-    senders_receivers = get_sender_receiver_pairs()
+    senders_receivers = get_conversant_pairs()
     
     text_aggregates = []
     
     for row in senders_receivers:
         # TODO: row should return datetime types for row["StartDate"], etc.
-        (sender, receiver, start, end) = (row["sender"], row["receiver"], row["StartDate"], row["EndDate"])
+        (conversant_one, conversant_two, start, end) = (row["conversant_one"], row["conversant_two"], row["start_date"], row["end_date"])
         # TODO: expose as datetime via sqlite.Row
         # manual datetime conversion
         start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
         end = datetime.strptime(end, "%Y-%m-%d %H:%M:%S")
         
-        text_aggregates.append( (sender, receiver, start, end) )
+        text_aggregates.append( (conversant_one, conversant_two, start, end) )
     
     date_funcs = [
         Dates.weeks,
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     
     query_template = """SELECT message, direction FROM Texts 
     WHERE
-        receiver = '%s' or sender = '%s'
+        conversant_two = '%s'
     AND
         timestamp >= '%s' and timestamp <= '%s'"""
     
@@ -52,7 +52,7 @@ if __name__ == "__main__":
             text_1 = ""
             text_2 = ""
             
-            for row in DB.query( query_template % (receiver, receiver, start_date, end_date) ):
+            for row in DB.query( query_template % (receiver, start_date, end_date) ):
                 direction = int(row[1])
                 
                 if direction == Direction.Sent:
