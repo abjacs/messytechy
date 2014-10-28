@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from datetime import date, datetime, time, timedelta
+from datetime import datetime
+import time
 from initialize import DB, Direction
 from dates import Dates
 import pennebaker
@@ -70,16 +71,26 @@ if __name__ == "__main__":
     
     api = pennebaker.Api()
     
-    # TODO...
+    
     text_1 = ""
     text_2 = ""
     
-    query = """SELECT Message FROM texts WHERE Receiver = 'lily carter' LIMIT 10;"""
-    for row in DB.query( query ):
-        text_1 += " " + row[0]
-
-    lsm = api.compare(text_1, text_2)
-    print lsm
-    
-    
+    for (sender, receiver, start, end) in text_aggregates:
+        for (start_date, end_date) in Dates.weeks(start, end):
+            text_1 = u""
+            text_2 = u""
+            
+            print "=== %s - %s ===" % (start_date, end_date)
+            print
+            
+            for row in DB.query( query_template % (receiver, start_date, end_date) ):
+                text_1 += " " + row[1]
+            
+            print "Text 1:\n%s..." % text_1[:]
+            print "Text 2:\n%s..." % text_2[:1000]
+            
+            print api.compare(text_1, text_2)
+            # sleep
+            time.sleep(3)
+            print
 
