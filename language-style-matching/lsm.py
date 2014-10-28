@@ -47,12 +47,12 @@ if __name__ == "__main__":
     
     api = pennebaker.Api()
     
-    for (sender, receiver, start, end) in text_aggregates:
+    for (conversant_one, conversant_two, start, end) in text_aggregates:
         for (start_date, end_date) in Dates.weeks(start, end):
             text_1 = ""
             text_2 = ""
             
-            for row in DB.query( query_template % (receiver, start_date, end_date) ):
+            for row in DB.query( query_template % (conversant_two, start_date, end_date) ):
                 direction = int(row[1])
                 
                 if direction == Direction.Sent:
