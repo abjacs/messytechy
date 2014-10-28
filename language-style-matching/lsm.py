@@ -64,5 +64,5 @@ if __name__ == "__main__":
             print api.compare(text_1, text_2)
             print
             # sleep
-            time.sleep(3)
+            time.sleep(750 / 1000.0)
             
