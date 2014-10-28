@@ -52,9 +52,6 @@ if __name__ == "__main__":
             text_1 = ""
             text_2 = ""
             
-            print "=== %s - %s ===" % (start_date, end_date)
-            print
-            
             for row in DB.query( query_template % (receiver, receiver, start_date, end_date) ):
                 direction = int(row[1])
                 
@@ -63,11 +60,8 @@ if __name__ == "__main__":
                 if direction == Direction.Received:
                     text_2 += " " + row[0]
             
-            print "Text 1:\n%s..." % text_1[:1000]
-            print "Text 2:\n%s..." % text_2[:1000]
-            
-            print api.compare(text_1, text_2)
-            print
+            lsm = api.compare(text_1, text_2)
+            print "\t".join( list( (sender, receiver, datetime.strftime(start_date, "%Y-%m-%d", ), datetime.strftime(end_date, "%Y-%m-%d"), lsm) ) )
             # sleep
             time.sleep(750 / 1000.0)
             
