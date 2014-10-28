@@ -51,6 +51,7 @@ if __name__ == "__main__":
         for (start_date, end_date) in Dates.weeks(start, end):
             text_1 = ""
             text_2 = ""
+            num_exchanged_texts = 0
             
             for row in DB.query( query_template % (conversant_two, start_date, end_date) ):
                 direction = int(row[1])
@@ -59,9 +60,11 @@ if __name__ == "__main__":
                     text_1 += " " + row[0]
                 if direction == Direction.Received:
                     text_2 += " " + row[0]
+                    
+                num_exchanged_texts += 1
             
             lsm = api.compare(text_1, text_2)
-            print "\t".join( list( (sender, receiver, datetime.strftime(start_date, "%Y-%m-%d", ), datetime.strftime(end_date, "%Y-%m-%d"), lsm) ) )
+            print "\t".join( list( (conversant_one, conversant_two, datetime.strftime(start_date, "%Y-%m-%d", ), datetime.strftime(end_date, "%Y-%m-%d"), lsm, str(num_exchanged_texts) ) ) )
             # sleep
             time.sleep(750 / 1000.0)
             
