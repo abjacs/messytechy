@@ -69,6 +69,7 @@ class DB(object):
     def open_connection():
         conn = sqlite3.connect(DB.Path())
         conn.row_factory = sqlite3.Row
+        conn.text_factory = str
         
         return conn
     
